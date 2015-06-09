@@ -59,8 +59,9 @@ int mkfs_wr_inode_bmp(FILE * output, int blocksize)
 }
 int mkfs_wr_block_bmp(FILE * output, int blocksize)
 {
-	uint8_t blkbmp_sz = (uint8_t)ceil((24*1024*1024)/(8*(blocksize*blocksize)));
+	uint8_t blkbmp_sz = (uint8_t)ceil((24.*1024.*1024.)/(8.*(blocksize*blocksize)));
 	uint8_t block_bmp[blkbmp_sz*blocksize];
+	printf(">>>>>>%d\n", blkbmp_sz);
 	int i;
 	for (i = 0; i < blkbmp_sz; i++)
 	{
