@@ -25,10 +25,6 @@ void enable_bash_mode(char fs_name[])
 	
 	//fread(inode, sizeof(inode), 1, ufs);
 	printf("Position Dir: %d Ind: %d\n", spb->root_dir*spb->magic_number, spb->root_inode*spb->magic_number);
-	while(getchar())
-	{
-		//printf("%d\n",);
-	}
 	while (!halted)
 	{
 		parameters[0] = (char *) malloc (256*sizeof(char));
