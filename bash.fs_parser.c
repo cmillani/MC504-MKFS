@@ -24,7 +24,8 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	{
 		if (vec_sz - arg_pos < 2) parse_error(INVALID_ARGS_ERR);
 		printf("Should -b\n");
-		enable_bash_mode(command_list[1]);
+		printf("%s\n",command_list[arg_pos+1]);
+		enable_bash_mode(command_list[arg_pos + 1]);
 		ret_val = 2;
 	}
 	else if (!strcmp(command_list[arg_pos], "-d"))

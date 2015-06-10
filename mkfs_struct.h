@@ -25,13 +25,13 @@ typedef struct metadata
 	uint32_t unix_time;
 	uint8_t permissions;
 	uint8_t name[256];
-	uint8_t parent;
+	uint16_t parent;
 	uint8_t type;
 }metadata;
 typedef struct inode
 {
 	uint16_t id;
-	uint8_t blocks[1024];
+	uint16_t blocks[512];
 	metadata metadata;	
 }inode;
 
