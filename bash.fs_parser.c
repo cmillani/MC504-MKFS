@@ -3,7 +3,10 @@
 #include "bash.fs_parser.h"
 #include "mkfs_error.h"
 #include "bash.fs_bsmode.h"
+#include "mkfs_struct.h"
 #include <string.h>
+#include "bash_apps/package.h"
+#include "Stack/stack.h"
 
 int parse_fs_command(char * command_list[], int arg_pos, int vec_sz) 
 {
@@ -23,8 +26,8 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	else if (!strcmp(command_list[arg_pos], "-b"))
 	{
 		if (vec_sz - arg_pos < 2) parse_error(INVALID_ARGS_ERR);
-		printf("Should -b\n");
-		printf("%s\n",command_list[arg_pos+1]);
+		//printf("Should -b\n");
+		//printf("%s\n",command_list[arg_pos+1]);
 		enable_bash_mode(command_list[arg_pos + 1]);
 		ret_val = 2;
 	}
@@ -40,7 +43,7 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	}
 	return ret_val;
 }
-int parse_bash_command(char * command_list[], int vec_sz)
+int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node **head)
 {
 	int ret_val = 0;
 	//printf("QTD>%d\n", vec_sz);
@@ -76,7 +79,8 @@ int parse_bash_command(char * command_list[], int vec_sz)
 	}
 	else if (!strcmp(command_list[0], "exit"))
 	{
-		printf("Should exit\n");
+		//printf("Should exit\n");
+		exit_bash();
 	}
 	else
 	{

@@ -10,9 +10,11 @@
 #define __Stack__stack__
 
 #include <stdio.h>
+#include "../mkfs_struct.h"
 #include <stdlib.h>
 
 typedef struct node{
+	inode * inode;
     int data;
     struct node *next;
 } node;
@@ -23,13 +25,12 @@ typedef struct stack{
     struct node *first;
 } *stack;
 
-void StackPush();
-void StackPop();
-void StackDisplay(node **head);
-void StackCreate();
-void StackDestroy();
-int StackIsEmpty();
-node * create_node(int);
+void Push(inode *Item, node **head);
+node * create_node(inode *item);
+void Display(node *head);
+int StackIsEmpty(node *temp);
+inode * Pop(node **head);
+inode * ViewLast(node **head);
 
 
 #endif /* defined(__Stack__stack__) */

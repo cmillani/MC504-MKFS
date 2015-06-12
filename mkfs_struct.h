@@ -1,14 +1,18 @@
 #ifndef MKFS_STRUCT
 #define MKFS_STRUCT
 
+#include <stdint.h>
+
 void setbit(uint8_t byte, uint8_t bit);
 void clearbit(uint8_t byte, uint8_t bit);
 
 #define DIR_TYPE 0
 #define ARQ_TYPE 1
-#define READ_PERMISSION 0
+#define READ_PERMISSION 2
 #define WRITE_PERMISSION 1
-#define EXEC_PERMISSION 2
+#define EXEC_PERMISSION 0
+
+#define BLK_PER_IND 16
 
 typedef uint8_t byte;
 
@@ -28,10 +32,11 @@ typedef struct metadata
 	uint16_t parent;
 	uint8_t type;
 }metadata;
+#define NULL_INODE 0xFFFF
 typedef struct inode
 {
 	uint16_t id;
-	uint16_t blocks[512];
+	uint16_t blocks[BLK_PER_IND];
 	metadata metadata;	
 }inode;
 

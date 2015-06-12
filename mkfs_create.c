@@ -52,8 +52,9 @@ int mkfs_wr_superblk(FILE * output, int blocksize)
 int mkfs_wr_inode_bmp(FILE * output, int blocksize)
 {
 	uint8_t inode_bmp[128] = {0}; //1024 cleared bits
+	inode_bmp[0] = 1; //First inode is the root inode
 	int i = 0;
-	char zero[] = {0};
+	uint8_t zero[] = {0};
 	fwrite(inode_bmp, sizeof(uint8_t), sizeof(inode_bmp), output);//Writes the inode bitmap region
 	for (i = 0; i < blocksize-128; i++)//Completes the block with zeroes
 	{
@@ -70,11 +71,11 @@ int mkfs_wr_block_bmp(FILE * output, int blocksize)
 	uint8_t block_bmp[blkbmp_sz*blocksize];
 	//printf(">>>>>>%d\n", blkbmp_sz);
 	int i;
-	block_bmp[0] = 0 | (1 << 0); //First block has root already
-	for (i = 1; i < blkbmp_sz; i++)//Writes zeroes to all positions, all are free
+	for (i = 0; i < blkbmp_sz; i++)//Writes zeroes to all positions, all are free
 	{
 		block_bmp[i] = 0;
 	}
+	block_bmp[0] = 0 | (1 << 7); //First block is root already
 	fwrite(block_bmp, sizeof(uint8_t), sizeof(block_bmp), output);//Writes the blocks
 	printf("BLKBMP%lu\n",ftell(output));
 	return 0;
@@ -88,16 +89,17 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 	double block_per_inode = sizeof(inode)/(double)blocksize; //Number of blocks that an inode can hold
 	printf("%f, %f\n", inode_per_block, block_per_inode);
 	inodes[0].id = 1;//The root dir, being initialized
-	for (j = 0; j < 512; j++) inodes[0].blocks[j] = 0;
+	for (j = 0; j < BLK_PER_IND; j++) inodes[0].blocks[j] = 0;
 	inodes[0].metadata.unix_time = (uint32_t)time(NULL);
 	inodes[0].metadata.permissions |= (1 << READ_PERMISSION) | (1 << WRITE_PERMISSION);
 	inodes[0].metadata.name[0] = '/';//ROOT!
 	inodes[0].metadata.parent = 0;//NULL parent
 	inodes[0].metadata.type = DIR_TYPE;//A dir
+	printf("ROOT>>%s\n", inodes[0].metadata.name);
 	for (i = 1; i < 1024; i++)//Initializes all the other Inodes
 	{
 		inodes[i].id = i;
-		for (j = 0; j < 512; j++) inodes[i].blocks[j] = 0;
+		for (j = 0; j < BLK_PER_IND; j++) inodes[i].blocks[j] = 0;
 		inodes[i].metadata.unix_time = (uint32_t)time(NULL);
 		inodes[i].metadata.permissions = 111;
 		inodes[i].metadata.name[0] = '\0';

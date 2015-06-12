@@ -7,41 +7,46 @@
 //
 
 #include "stack.h"
+#include "../mkfs_struct.h"
 
-void Display(node **head) {
+void Display(node *head) {
     node *temp;
-    temp = *head;
-    if (StackIsEmpty(temp))
-        printf("\nThe stack is empty!");
+    temp = head;
+    if (StackIsEmpty(head))
+        printf("\nThe stack is empty!\n");
     else {
         while (temp != NULL) {
-            printf("%d\n", temp->data);
+            printf("%s", temp->inode->metadata.name);
+			if (temp->next != NULL) printf("/");
             temp = temp->next;
         }
     }
+	printf(" # ");
 }
 
-void Push(int Item, node **head) {
+void Push(inode *Item, node **head) {
     node *New;
     node *temp;
     New = create_node(Item);
     temp = *head;
     if (StackIsEmpty(temp)){
-        temp = (struct node*) malloc (sizeof (struct node));
-        temp = temp->next;
+        *head = New;
     }
-    while (temp != NULL) {
-        temp = temp->next;
-    }
-    temp = New;
+	else
+	{
+	    while (temp->next != NULL) {
+	        temp = temp->next;
+	    }
+    	temp->next = New;
+	}
 }
 
-node * create_node(int item) {
+node * create_node(inode *item) {
     node * temp;
     temp = (node *) malloc(sizeof(node));
     if (temp == NULL)
         printf("\nMemory Cannot be allocated");
-    temp->data = item;
+    temp->inode = item;
     temp->next = NULL;
     return (temp);
 }
@@ -53,26 +58,45 @@ int StackIsEmpty(node *temp) {
         return 0;
 }
 
-int Pop(node **head) {
-    int item;
+inode * Pop(node **head) {
+    inode *item;
     node *temp;
     node *oldNode = NULL;
     temp = *head;
     if (StackIsEmpty(temp)){
-        printf("\nThe stack is empty!");
-        return -1;
+        return NULL;
     }
     else {
-        do {
+		while (temp->next != NULL)
+        {
             oldNode = temp;
             temp = temp->next;
-        }while (temp != NULL);
+        }
     }
-    item = (oldNode)->data;
-    free(oldNode);
+    item = temp->inode;
+    free(temp);
+	if (oldNode != NULL) oldNode->next = NULL;
+	else *head = NULL;
     
-    return (item);
+    return item;
 }
-
+inode * ViewLast(node **head)
+{
+    inode *item;
+    node *temp;
+    temp = *head;
+    if (StackIsEmpty(temp)){
+        return NULL;
+    }
+    else {
+		while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+    }
+    item = temp->inode;
+    
+    return item;
+}
 
 
