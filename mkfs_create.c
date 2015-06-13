@@ -52,7 +52,7 @@ int mkfs_wr_superblk(FILE * output, int blocksize)
 int mkfs_wr_inode_bmp(FILE * output, int blocksize)
 {
 	uint8_t inode_bmp[128] = {0}; //1024 cleared bits
-	inode_bmp[0] = 1; //First inode is the root inode
+	inode_bmp[0] = 1 << 7; //First inode is the root inode
 	int i = 0;
 	uint8_t zero[] = {0};
 	fwrite(inode_bmp, sizeof(uint8_t), sizeof(inode_bmp), output);//Writes the inode bitmap region

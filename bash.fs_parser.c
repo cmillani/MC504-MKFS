@@ -43,7 +43,7 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	}
 	return ret_val;
 }
-int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node **head)
+int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node **head, FILE* ufs)
 {
 	int ret_val = 0;
 	//printf("QTD>%d\n", vec_sz);
@@ -59,7 +59,10 @@ int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node *
 	}
 	else if (!strcmp(command_list[0], "mkdir"))
 	{
-		printf("Should mkdir\n");
+		// printf("Should mkdir\n");
+		if (vec_sz == 2) mkdir_bash(*ViewLast(head),command_list[1],ufs,spb);
+		else printf("Unknown command\n");
+		//printf("DEPOIS%s\n",command_list[1]);
 	}
 	else if (!strcmp(command_list[0], "chdir"))
 	{
@@ -84,7 +87,7 @@ int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node *
 	}
 	else
 	{
-		parse_error(INVALID_ARGS_ERR);
+		printf("Unknown command\n");
 	}
 	return ret_val;
 }

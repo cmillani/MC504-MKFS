@@ -20,7 +20,7 @@ void enable_bash_mode(char fs_name[])
 	
 	node *current_dir = NULL;
 	
-	ufs = fopen(fs_name, "rb");
+	ufs = fopen(fs_name, "rb+");
 	
 	//printf("Went bash mode\n");
 	
@@ -61,7 +61,7 @@ void enable_bash_mode(char fs_name[])
 			// {
 				// printf("%s\n",parameters[i]);
 			// }
-			parse_bash_command(parameters, read, spb[0], &current_dir);
+			parse_bash_command(parameters, read, spb[0], &current_dir, ufs);
 		}
 	}
 }

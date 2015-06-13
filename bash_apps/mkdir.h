@@ -6,6 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mkdir_bash(inode curr_inode, char * name, FILE * ufs, superblock spb);
+void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock spb);
 
 #endif

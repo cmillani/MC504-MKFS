@@ -6,5 +6,6 @@
 #include <stdlib.h>
 
 int frst_free_inode(FILE * ufs, int blocksize);
+int frst_free_block(FILE * ufs, int blocksize, int frst_data_blk);
 
 #endif
