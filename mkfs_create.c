@@ -39,7 +39,7 @@ int mkfs_wr_superblk(FILE * output, int blocksize)
 	fs_superblock.root_inode = inode_addr; //Byte position of the first inode
 	fs_superblock.root_dir = root_addr; //Byte position of the root dir
 	printf("IN>%d<ROOT>%d\n", inode_addr*blocksize, root_addr*blocksize);
-	fs_superblock.dir_inode = 0;
+	fs_superblock.dir_inode = 1;
 	fs_superblock.arq_inode = 0;
 	fwrite(&fs_superblock, sizeof(superblock), 1, output);//Writes the superblock to the file
 	for (i = 0; i < blocksize-sizeof(superblock); i++)//Complete the block with zeroes
@@ -88,7 +88,7 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 	double inode_per_block = (double)blocksize/sizeof(inode); //Number of inodes that a block requires
 	double block_per_inode = sizeof(inode)/(double)blocksize; //Number of blocks that an inode can hold
 	printf("%f, %f\n", inode_per_block, block_per_inode);
-	inodes[0].id = 1;//The root dir, being initialized
+	inodes[0].id = 0;//The root dir, being initialized
 	for (j = 0; j < BLK_PER_IND; j++) inodes[0].blocks[j] = 0;
 	inodes[0].metadata.unix_time = (uint32_t)time(NULL);
 	inodes[0].metadata.permissions |= (1 << READ_PERMISSION) | (1 << WRITE_PERMISSION);

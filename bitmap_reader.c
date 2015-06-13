@@ -1,4 +1,7 @@
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "bitmap_reader.h"
 
 int frst_free_inode(FILE * ufs, int blocksize)
 {
@@ -21,5 +24,5 @@ int frst_free_inode(FILE * ufs, int blocksize)
 		}
 	}
 	if (selected != -1) return selected*blocksize;
-	else return -1;b
+	else return -1;
 }

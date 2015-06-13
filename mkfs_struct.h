@@ -19,8 +19,8 @@ typedef uint8_t byte;
 typedef struct superblock
 {
 	uint16_t magic_number;
-	uint16_t root_inode;
-	uint16_t root_dir;
+	uint16_t root_inode; //block number
+	uint16_t root_dir; //block number
 	uint16_t dir_inode;
 	uint16_t arq_inode;
 }superblock;
@@ -29,10 +29,10 @@ typedef struct metadata
 	uint32_t unix_time;
 	uint8_t permissions;
 	uint8_t name[256];
-	uint16_t parent;
+	uint16_t parent; //The id of the parent inode
 	uint8_t type;
 }metadata;
-#define NULL_INODE 0xFFFF
+
 typedef struct inode
 {
 	uint16_t id;
