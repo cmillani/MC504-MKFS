@@ -44,7 +44,7 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	}
 	return ret_val;
 }
-int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node **head, FILE* ufs)
+int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node **head, FILE* ufs, char buffer[])
 {
 	int ret_val = 0;
 	//printf("QTD>%d\n", vec_sz);
@@ -95,11 +95,21 @@ int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node *
 	}
 	else if (!strcmp(command_list[0], "echo"))
 	{
-		printf("Should echo\n");
+		if (vec_sz == 3)
+		{
+			echo_bash(reloaded, ufs, spb, buffer);
+		}
+		else printf("Unknown command\n");
+		// printf("Should echo\n");
 	}
 	else if (!strcmp(command_list[0], "cat"))
 	{
-		printf("Should cat\n");
+		if (vec_sz == 2)
+		{
+			cat_bash(reloaded, command_list[1], ufs, spb);
+		}
+		else printf("Unknown command\n");
+		// printf("Should cat\n");
 	}
 	else if (!strcmp(command_list[0], "exit"))
 	{

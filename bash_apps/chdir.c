@@ -29,6 +29,11 @@ void chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs
 			break;
 		}
 	}
+	if (the_one.metadata.type != DIR_TYPE)
+	{
+		printf("Not a directory\n");
+		return;
+	}
 	if (!done) printf("Directory not found\n");
 	else
 	{

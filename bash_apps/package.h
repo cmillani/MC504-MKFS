@@ -8,6 +8,7 @@
 #include "ls.h"
 #include "mkdir.h"
 #include "rm.h"
+#include "echo.h"
 
 
 #endif

@@ -44,11 +44,10 @@ void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock 
 	
 	inode_write(offset, ufs, blocksize, spb.root_inode, oldinode);
 	
-	//TODO ESCREVER O BLOCO NOVO NO INODE ATUAL, COLOCANDO COMO FILHO
 	
 	uint16_t children_list[1024] = {0};
 	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
-	
+	// printf("FREE_IND_BLK = %d\n",freeblk);
 	write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
 	// printf("FREE:%d\n",freeblk);
 	

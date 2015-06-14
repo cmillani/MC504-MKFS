@@ -10,6 +10,7 @@ void ls_bash(inode curr_inode, FILE * ufs, superblock spb, char extra[])
 	uint16_t children[1024] = {0};
 	uint16_t aux[1024] = {0};
 	int toprint = first_free_child(curr_inode, ufs, spb, spb.magic_number, children);
+	// printf("will ls %d children\n", toprint);
 	inode to_ls;
 	int i;
 	if (extra && !strcmp(extra, "-l"))

@@ -61,7 +61,7 @@ void enable_bash_mode(char fs_name[])
 			// {
 				// printf("%s\n",parameters[i]);
 			// }
-			parse_bash_command(parameters, read, spb[0], &current_dir, ufs);
+			parse_bash_command(parameters, read, spb[0], &current_dir, ufs, buffer);
 		}
 	}
 }

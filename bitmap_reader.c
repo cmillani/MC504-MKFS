@@ -4,6 +4,40 @@
 #include "bitmap_reader.h"
 #include <math.h>
 
+void clear_inode(FILE * ufs, int blocksize, int inode_id)
+{
+	int saved_position = ftell(ufs);
+	uint8_t byte[] = {0};
+	
+	fseek(ufs, blocksize, SEEK_SET);
+	fseek(ufs, sizeof(uint8_t)*(inode_id/8), SEEK_CUR);
+	
+	fread(byte, sizeof(uint8_t), 1, ufs);
+	
+	byte[0] &= ~(1 << (inode_id%8));
+	fseek (ufs, -sizeof(uint8_t),SEEK_CUR);
+	fwrite(byte, sizeof(uint8_t), 1, ufs);
+	
+	fseek(ufs, saved_position, SEEK_SET);
+}
+
+void clear_block(FILE * ufs, int blocksize, int frst_data_blo, int block_nbr)
+{
+	int saved_position = ftell(ufs);
+	uint8_t byte[] = {0};
+	
+	fseek(ufs, 2*blocksize, SEEK_SET);
+	fseek(ufs, sizeof(uint8_t)*(block_nbr/8), SEEK_CUR);
+	
+	fread(byte, sizeof(uint8_t), 1, ufs);
+	
+	byte[0] &= ~(1 << (block_nbr%8));
+	fseek (ufs, -sizeof(uint8_t),SEEK_CUR);
+	fwrite(byte, sizeof(uint8_t), 1, ufs);
+	
+	fseek(ufs, saved_position, SEEK_SET);
+}
+
 int frst_free_inode(FILE * ufs, int blocksize) //Return the number of the first free inode and marks it as not free anymore
 {
 	int saved_position = ftell(ufs);
