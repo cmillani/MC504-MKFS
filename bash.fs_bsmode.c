@@ -8,7 +8,7 @@
 #include "mkfs_struct.h"
 #include "Stack/stack.h"
 
-#include "bash.fs_reader.h"
+//#include "bash.fs_reader.h"
 
 void enable_bash_mode(char fs_name[])
 {

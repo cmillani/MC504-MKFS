@@ -49,7 +49,8 @@ void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock 
 	uint16_t children_list[1024] = {0};
 	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
 	
-	printf("FREE:%d\n",freeblk);
+	write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
+	// printf("FREE:%d\n",freeblk);
 	
 	fseek(ufs, pos_saver, SEEK_SET);
 }

@@ -6,24 +6,40 @@
 #include <stdbool.h>
 #include <math.h>
 
-//the children_list must be a 1024 uint16_t vector
 
-int write_to_dir(int child_nbr, inode inode, int new_inode_id, superblock spb)
+int write_to_dir(int child_nbr, inode inode, int new_inode_id, superblock spb, FILE * ufs)
 {
+	if (child_nbr >= 1024)
+	{
+		printf("Inode full\n");
+		return -1;
+	}
 	int blocksize = spb.magic_number;
-	if (child_nbr < 12-2)
+	int initial_pos = ftell(ufs);
+	if (child_nbr < 12-4) //No refered position
 	{
-		
+		inode.blocks[child_nbr] = new_inode_id;
+		inode_write(inode.id, ufs, blocksize, spb.root_inode, inode);
 	}
-	else if (child_nbr == 10)//must alloc
+	else //Refered position //TODO TERMINAR
 	{
-		
+		if ((child_nbr - (12-4))%(blocksize/2) == 0)//First position, verify is block is already there
+		{
+			int block_in_vec = (12-4) + ((child_nbr - (12-4))/(blocksize/2));
+			if (inode.blocks[block_in_vec] == 0)//Alloc the block
+			{
+				
+			}
+		}
 	}
-	else if ((child_nbr-10)%(blocksize/2) == 0)//must alloc 2 times
-	{
-		
-	}
+	fseek(ufs, initial_pos, SEEK_SET);
 	return 0;
+	// else if ((child_nbr-10)%(blocksize/2) == 0)//must alloc 2 times
+}
+
+int read_blk_16(int blk_id, uint16_t block[], int firstblk, FILE *ufs)
+{
+	
 }
 
 int first_free_child(inode curr_inode, FILE * ufs, superblock spb, int blocksize, uint16_t *children_list)//Returns a children list via the children_list pointer and the first free block number via the function return
@@ -36,7 +52,7 @@ int first_free_child(inode curr_inode, FILE * ufs, superblock spb, int blocksize
 	int i = 0, j = 0;
 	uint16_t block[1];
 
-	for (j = 0; j < BLK_PER_IND-2; j++)
+	for (j = 0; j < BLK_PER_IND-4; j++)
 	{
 		if (curr_inode.blocks[j] == 0 && !found_free) 
 		{
@@ -54,9 +70,9 @@ int first_free_child(inode curr_inode, FILE * ufs, superblock spb, int blocksize
 	}
 	if (!found_free)
 	{
-		// pos_saver = ftell(ufs);
+		for (j = BLK_PER_IND - 4; j < BLK_PER_IND; j++)
 		fseek(ufs, spb.root_dir * blocksize, SEEK_SET);
-		fseek(ufs, curr_inode.blocks[BLK_PER_IND - 2]*blocksize, SEEK_CUR);
+		fseek(ufs, curr_inode.blocks[j]*blocksize, SEEK_CUR);
 		for (i = 0; i < blocksize/2; i++)
 		{
 			fread(block, sizeof(uint16_t), 1, ufs);
@@ -70,57 +86,12 @@ int first_free_child(inode curr_inode, FILE * ufs, superblock spb, int blocksize
 			current_blk++;
 		}
 	}
-	// fseek(ufs, pos_saver, SEEK_SET);
-	if (curr_inode.blocks[BLK_PER_IND-1] == 0 && !found_free)
-	{
-		found_free = true;
-		frst_fr_blk = current_blk;
-	}
-	if (!found_free)
-	{
-		// pos_saver = ftell(ufs);
-		fseek(ufs, spb.root_dir * blocksize, SEEK_SET);
-		fseek(ufs, curr_inode.blocks[BLK_PER_IND - 1]*blocksize, SEEK_CUR);
-		for (i = 0; i < blocksize/2; i++)
-		{
-			fread(block, sizeof(uint16_t), 1, ufs);
-			if (block[0] == 0 && !found_free)
-			{
-				found_free = true;
-				frst_fr_blk = current_blk;
-				break;
-			}
-			pos_saver = ftell(ufs);
-			fseek(ufs, spb.root_dir * blocksize, SEEK_SET);
-			fseek(ufs, block[0]*blocksize, SEEK_CUR);
-			if (!found_free)
-			{
-				for (j = 0; j < blocksize/2; j++)
-				{
-					fread(block, sizeof(uint16_t), 1, ufs);
-					if (block[0] == 0 && !found_free)
-					{
-						found_free = true;
-						frst_fr_blk = current_blk;
-						break;
-					}
-					children_list[current_blk] = curr_inode.blocks[j];
-					current_blk++;
-				}
-			}
-			fseek(ufs, pos_saver, SEEK_SET);
-		}
-	}
 	fseek(ufs, initial_pos, SEEK_SET);
-	if (frst_fr_blk >= )
+	
 	return found_free?frst_fr_blk:-1;
 }
 
-inode * dir_read(inode curr_inode, FILE* ufs, int count, int blocksize, uint16_t first_inode_blk)
-{
-	
-	return 0;
-}
+
 
 int inode_read(uint16_t inode_numb, FILE * ufs, int blocksize, uint16_t first_inode_blk, inode* read_one)
 {
