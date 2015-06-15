@@ -1,3 +1,8 @@
+/**********************************************************
+RA 145654 Carlos Eduardo Millani
+RA 146906 Letícia da Silva Gonçalves
+**********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
