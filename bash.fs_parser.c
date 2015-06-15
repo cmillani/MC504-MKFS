@@ -91,7 +91,8 @@ int parse_bash_command(char * command_list[], int vec_sz, superblock spb, node *
 	}
 	else if (!strcmp(command_list[0], "rm"))
 	{
-		printf("Should rm\n");
+		rm_bash(reloaded, command_list[1], spb, ufs);
+		// printf("Should rm\n");
 	}
 	else if (!strcmp(command_list[0], "echo"))
 	{

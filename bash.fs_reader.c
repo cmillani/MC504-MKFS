@@ -61,7 +61,43 @@ int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t blo
 
 void remove_from_dir(int inode_id, inode parent, FILE *ufs, superblock spb)
 {
-	
+	uint16_t children[1024] = {0};
+	inode realoc;
+	int i;
+	int position = -1;
+	int blocksize = spb.magic_number;
+	int last = first_free_child(parent, ufs, spb, blocksize, children);
+	for (i = 0; i < last; i++)
+	{
+		if (children[i] == inode_id)
+		{
+			position = i;
+		}
+	}
+	if (last == -1) last = 1023;
+	else last -= 1;
+	if (position == -1) 
+	{
+		printf("Error\n");
+		return;
+	}
+	// printf("Position %d last %d children %d\n", position, last, children[last]);
+	write_to_dir(position, parent, children[last], spb, ufs);
+	inode_read(parent.id, ufs, spb.magic_number, spb.root_inode, &parent);
+	// printf("last one is %d\n",last);
+	//inode_read(last, ufs, blocksize, spb.root_inode, &realoc);
+	// inode_write(inode_id, ufs, blocksize, uint16_t first_inode_blk, realoc);
+
+	// write_to_dir(inode_id, parent, last, spb, ufs);
+	write_to_dir(last, parent, 0, spb, ufs);
+	if ((last - (BLK_PER_IND-4))%(blocksize/2) == 0)
+	{
+		// printf("caiu aqui\n");
+		int block_in_vec = (BLK_PER_IND-4) + ((last - (BLK_PER_IND-4))/(blocksize/2));
+		inode_read(parent.id, ufs, spb.magic_number, spb.root_inode, &parent);
+		parent.blocks[block_in_vec] = 0;
+		inode_write(parent.id, ufs, blocksize, spb.root_inode, parent);
+	}
 }
 
 int write_to_dir(int child_nbr, inode inode, uint16_t new_inode_id, superblock spb, FILE * ufs)

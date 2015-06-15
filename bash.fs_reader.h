@@ -11,4 +11,6 @@ int first_free_child(inode curr_inode, FILE * ufs, superblock spb, int blocksize
 int write_to_dir(int child_nbr, inode inode, uint16_t new_inode_id, superblock spb, FILE * ufs);
 int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t block[], superblock spb, FILE * ufs);
 
+void remove_from_dir(int inode_id, inode parent, FILE *ufs, superblock spb);
+
 #endif
