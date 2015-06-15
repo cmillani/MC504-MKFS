@@ -7,9 +7,14 @@
 #include <stdbool.h>
 #include <math.h>
 
-void update_spb(superblock spb)
+void update_spb(superblock spb, FILE * ufs)
 {
+	int save = ftell(ufs);
 	
+	fseek(ufs, 0, SEEK_SET);
+	fwrite(&spb, sizeof(superblock), 1, ufs);
+	
+	fseek(ufs, save, SEEK_SET);
 }
 
 int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t block[], superblock spb, FILE * ufs)

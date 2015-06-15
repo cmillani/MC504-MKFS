@@ -13,4 +13,6 @@ int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t blo
 
 void remove_from_dir(int inode_id, inode parent, FILE *ufs, superblock spb);
 
+void update_spb(superblock spb, FILE * ufs);
+
 #endif

@@ -64,6 +64,12 @@ void enable_bash_mode(char fs_name[])
 				// printf("%s\n",parameters[i]);
 			// }
 			parse_bash_command(parameters, read, spb[0], &current_dir, ufs, buffer);
+			int try = ftell(ufs);
+			
+			fseek(ufs, 0, SEEK_SET);
+			fread(spb, sizeof(superblock), 1, ufs);//Reloads superblock
+			
+			fseek(ufs, try, SEEK_SET);
 		}
 	}
 }

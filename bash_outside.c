@@ -41,7 +41,7 @@ void minus_d(FILE * ufs)
 		}
 	}
 	
-	printf("Used Inodes: %i \nUsed Directories: %i \nUsed Data Blocks: %i\n", inodes, 1, blocks-1);
+	printf("Used Inodes: %i \nUsed Directories: %i \nUsed Data Blocks: %i\n", inodes, spb->dir_inode, blocks-1);
 }
 
 void minus_i(FILE * input, char path_inside[], FILE * ufs)

@@ -16,6 +16,8 @@ void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock 
 		return;
 	}
 	//printf("%s\n",dir_name);
+	spb.dir_inode++;
+	update_spb(spb, ufs);
 	int blocksize = spb.magic_number;
 	inode oldinode;
 	
