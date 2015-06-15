@@ -6,8 +6,8 @@ void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 	int blocksize = spb.magic_number;
 	inode oldinode;
 	uint16_t children_list[1024] = {0}; //To use in order to get the first free child in the parent inode
-	uint8_t block[4096]; //Buffer
-	uint8_t the_name[256]; //To read the file name
+	uint8_t block[4096] = {0}; //Buffer
+	uint8_t the_name[256] = {0}; //To read the file name
 	int overflow = 0;
 
 	int offset = frst_free_inode(ufs, blocksize);
@@ -31,6 +31,8 @@ void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 	if (buffer[pos_in_buffer] != '\"') //No "
 	{
 		sscanf(&buffer[pos_in_buffer],"%s",&block[0]);
+		// int j = 0;
+		// for(j = 0; j < blocksize; j++)printf("%c",block[j]);
 		pos_in_buffer += strlen((char *)&block[0]) + 1;
 		// printf(">>%c\n",buffer[strlen((char *)&block[0]) + 5]);
 		if (buffer[strlen((char *)&block[0]) + 5] != ' ') overflow = 1; 
@@ -69,7 +71,7 @@ void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 			int child = first_free_child(oldinode, ufs, spb, blocksize, children_list);
 
 			write_to_file(child, oldinode, newblock, block, spb, ufs);
-
+		
 			strcpy((char *)&block[0], (char *)&block[blocksize]);//Sends the extra part the was not written to the start of the buffer again
 		}
 		while (strlen((char *)&block[0]) > blocksize);

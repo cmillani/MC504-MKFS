@@ -14,7 +14,9 @@ int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t blo
 		printf("Inode full\n");
 		return -1;
 	}
+	
 	int blocksize = spb.magic_number;
+	// int j; for(j = 0; j < blocksize; j++)printf("%c",block[j]);
 	int initial_pos = ftell(ufs);
 	if (child_nbr < BLK_PER_IND-4) //No refered position
 	{

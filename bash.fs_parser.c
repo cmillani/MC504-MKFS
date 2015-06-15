@@ -8,6 +8,7 @@
 #include "bash_apps/package.h"
 #include "Stack/stack.h"
 #include "bash.fs_reader.h"
+#include "bash_outside.h"
 
 int parse_fs_command(char * command_list[], int arg_pos, int vec_sz) 
 {
@@ -21,7 +22,9 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	else if (!strcmp(command_list[arg_pos], "-o"))
 	{
 		if (vec_sz - arg_pos < 4) parse_error(INVALID_ARGS_ERR);
-		printf("Should -o\n");
+		FILE * output = fopen(command_list[arg_pos + 2], "wb");
+		FILE * ufs = fopen(command_list[arg_pos + 3], "rb+");
+		minus_o(output, command_list[arg_pos + 1], ufs);
 		ret_val = 3;
 	}
 	else if (!strcmp(command_list[arg_pos], "-b"))
