@@ -52,7 +52,8 @@ int main (int argc, char* argv[])
 	fseek(ufs, 0, SEEK_SET);
 	mkfs_set_fs(ufs, block_size);
 	
-	printf("%lf\n", ((ftell(ufs))/((24.*1024*1024))*100));
+	printf("Success!\n");
+	printf("Initial Overhead: %lf\n", ((ftell(ufs))/((24.*1024*1024))*100));
 	
 	fclose(ufs);
 	

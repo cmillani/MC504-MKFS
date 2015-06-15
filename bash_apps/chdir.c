@@ -4,7 +4,7 @@
 
 //void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock spb) //TODO verificar permissoes
 
-void chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs, superblock spb)
+int chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs, superblock spb)
 {
 	int blocksize = spb.magic_number;
 	uint16_t children_list[1024] = {0};
@@ -18,7 +18,7 @@ void chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs
 		{
 			Pop(head);
 		}
-		return;
+		return 1;
 	}
 	for (i = 0; i < freeblk; i++)
 	{
@@ -35,11 +35,17 @@ void chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs
 	{
 		printf("Not a directory\n");
 		// printf("theone->%s\n",the_one.metadata.name);
-		return;
+		return 0;
 	}
-	if (!done) printf("Directory not found\n");
+	if (!done) 
+	{
+		printf("Directory not found\n");
+		return 0;
+	}
 	else
 	{
 		Push(&the_one, head);
+		return 1;
 	}
+	return 1;
 }

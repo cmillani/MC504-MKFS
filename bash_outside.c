@@ -77,7 +77,11 @@ void minus_i(FILE * input, char path_inside[], FILE * ufs)
 	{
 		// printf(">%s<\n", tok);
 		inode_read(ViewLast(&current_dir)->id, ufs, spb->magic_number, spb->root_inode, &reloaded);
-		chdir_bash(reloaded, tok, &current_dir, ufs, *spb);
+		if (!(chdir_bash(reloaded, tok, &current_dir, ufs, *spb)))
+		{
+			printf("Pathname doesn`t exist\n");
+			return;
+		}
 		// Display(current_dir);
 		tok = strtok(NULL, "/");
 	}
@@ -167,7 +171,11 @@ void minus_o(FILE * output, char path_inside[], FILE * ufs)
 	{
 		// printf(">%s<\n", tok);
 		inode_read(ViewLast(&current_dir)->id, ufs, spb->magic_number, spb->root_inode, &reloaded);
-		chdir_bash(reloaded, tok, &current_dir, ufs, *spb);
+		if (!(chdir_bash(reloaded, tok, &current_dir, ufs, *spb)))
+		{
+			printf("Pathname doesn`t exist\n");
+			return;
+		}
 		// Display(current_dir);
 		tok = strtok(NULL, "/");
 	}

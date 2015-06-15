@@ -9,6 +9,6 @@
 #include <string.h>
 #include "../Stack/stack.h"
 
-void chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs, superblock spb);
+int chdir_bash(inode curr_inode, const char dir_name[], node **head, FILE * ufs, superblock spb);
 
 #endif

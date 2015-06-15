@@ -38,7 +38,7 @@ int mkfs_wr_superblk(FILE * output, int blocksize)
 	fs_superblock.magic_number = blocksize;//The magic number holds the block size
 	fs_superblock.root_inode = inode_addr; //Byte position of the first inode
 	fs_superblock.root_dir = root_addr; //Byte position of the root dir
-	printf("IN>%d<ROOT>%d\n", inode_addr*blocksize, root_addr*blocksize);
+	// printf("IN>%d<ROOT>%d\n", inode_addr*blocksize, root_addr*blocksize);
 	fs_superblock.dir_inode = 1;
 	fs_superblock.arq_inode = 0;
 	fwrite(&fs_superblock, sizeof(superblock), 1, output);//Writes the superblock to the file
@@ -46,7 +46,7 @@ int mkfs_wr_superblk(FILE * output, int blocksize)
 	{
 		fwrite(zero, sizeof(uint8_t), 1, output);
 	}
-	printf("SPB%lu\n",ftell(output));
+	// printf("SPB%lu\n",ftell(output));
 	return 0;
 }
 int mkfs_wr_inode_bmp(FILE * output, int blocksize)
@@ -60,7 +60,7 @@ int mkfs_wr_inode_bmp(FILE * output, int blocksize)
 	{
 		fwrite(zero, sizeof(uint8_t), 1, output);
 	}
-	printf("INBMP%lu\n",ftell(output));
+	// printf("INBMP%lu\n",ftell(output));
 	return 0;
 }
 int mkfs_wr_block_bmp(FILE * output, int blocksize)
@@ -77,7 +77,7 @@ int mkfs_wr_block_bmp(FILE * output, int blocksize)
 	}
 	block_bmp[0] = 0 | (1 << 7); //First block is root already
 	fwrite(block_bmp, sizeof(uint8_t), sizeof(block_bmp), output);//Writes the blocks
-	printf("BLKBMP%lu\n",ftell(output));
+	// printf("BLKBMP%lu\n",ftell(output));
 	return 0;
 }
 int mkfs_wr_inodes(FILE * output, int blocksize) 
@@ -87,7 +87,7 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 	char zero[] = {0};
 	double inode_per_block = (double)blocksize/sizeof(inode); //Number of inodes that a block requires
 	double block_per_inode = sizeof(inode)/(double)blocksize; //Number of blocks that an inode can hold
-	printf("%f, %f\n", inode_per_block, block_per_inode);
+	// printf("%f, %f\n", inode_per_block, block_per_inode);
 	inodes[0].id = 0;//The root dir, being initialized
 	for (j = 0; j < BLK_PER_IND; j++) inodes[0].blocks[j] = 0;
 	inodes[0].metadata.unix_time = (uint32_t)time(NULL);
@@ -95,7 +95,7 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 	inodes[0].metadata.name[0] = '/';//ROOT!
 	inodes[0].metadata.parent = 0;//NULL parent
 	inodes[0].metadata.type = DIR_TYPE;//A dir
-	printf("ROOT>>%s\n", inodes[0].metadata.name);
+	// printf("ROOT>>%s\n", inodes[0].metadata.name);
 	for (i = 1; i < 1024; i++)//Initializes all the other Inodes
 	{
 		inodes[i].id = i;
@@ -143,6 +143,6 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 		}
 	}
 	
-	printf("INDS%lu\n",ftell(output));
+	// printf("INDS%lu\n",ftell(output));
 	return 0;
 }
