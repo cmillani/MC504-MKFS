@@ -19,7 +19,7 @@ void cat_bash(inode curr_inode, const char target_name[], FILE * ufs, superblock
 		}
 	}
 	// printf("Will cat %s\n", the_one.metadata.name);
-	if (the_one.metadata.type == DIR_TYPE)
+	if (done && the_one.metadata.type == DIR_TYPE)
 	{
 		printf("Is a directory\n");
 		return;
@@ -27,6 +27,11 @@ void cat_bash(inode curr_inode, const char target_name[], FILE * ufs, superblock
 	if (!done) printf("File not found\n");
 	else
 	{
+		if (!(the_one.metadata.permissions & (1 << READ_PERMISSION)))
+		{
+			printf("Not enough permissions\n");
+			return;
+		}
 		int print_lim = first_free_child(the_one, ufs, spb, blocksize, children_list);
 		// printf("Numb of blocks = %d\n", print_lim);
 		uint8_t block[blocksize];

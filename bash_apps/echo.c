@@ -2,6 +2,11 @@
 
 void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 {
+	if (!(curr_inode.metadata.permissions & (1 << WRITE_PERMISSION)))
+	{
+		printf("Not enough permissions\n");
+		return;
+	}
 	//Reads and initializes the new inode
 	int blocksize = spb.magic_number;
 	inode oldinode;

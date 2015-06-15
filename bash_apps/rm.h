@@ -8,6 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs);
+int rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs);
 
 #endif

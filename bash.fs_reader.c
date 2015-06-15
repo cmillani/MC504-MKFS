@@ -7,6 +7,11 @@
 #include <stdbool.h>
 #include <math.h>
 
+void update_spb(superblock spb)
+{
+	
+}
+
 int write_to_file(int child_nbr, inode inode, uint16_t newblock_nbr, uint8_t block[], superblock spb, FILE * ufs)
 {
 	if (child_nbr >= 1024)

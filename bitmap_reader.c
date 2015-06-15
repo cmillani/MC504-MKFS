@@ -4,6 +4,8 @@
 #include "bitmap_reader.h"
 #include <math.h>
 
+
+
 void clear_inode(FILE * ufs, int blocksize, int inode_id)
 {
 	int saved_position = ftell(ufs);

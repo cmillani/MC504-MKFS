@@ -10,6 +10,11 @@
 
 void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock spb) //TODO verificar permissoes
 {
+	if (!(curr_inode.metadata.permissions & (1 << WRITE_PERMISSION)))
+	{
+		printf("Not enough permissions\n");
+		return;
+	}
 	//printf("%s\n",dir_name);
 	int blocksize = spb.magic_number;
 	inode oldinode;

@@ -1,6 +1,6 @@
 #include "rm.h"
 
-void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
+int rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 {
 	int blocksize = spb.magic_number;
 	
@@ -21,11 +21,16 @@ void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 	if (!done) 
 	{
 		printf("Target not found\n");
-		return;
+		return 0;
+	}
+	
+	if (!(to_remove.metadata.permissions & (1 << WRITE_PERMISSION))) 
+	{
+		printf("You don`t have the permission to write to the file \"%s\"\n", to_remove.metadata.name);
+		return 0;
 	}
 	
 	uint16_t children[1024] = {0};
-	clear_inode(ufs, blocksize, to_remove.id);
 	int count = first_free_child(to_remove, ufs, spb, blocksize, children);
 	if (to_remove.metadata.type == ARQ_TYPE)
 	{
@@ -34,6 +39,19 @@ void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 			clear_block(ufs, blocksize, spb.root_dir, children[i]);
 		}
 	}
+	else // Should remove children too
+	{
+		inode recursive;
+		int fail = 0;
+		for (i = 0; i < count; i++)
+		{
+			inode_read(children[i], ufs, blocksize, spb.root_inode, &recursive);
+			// printf("%s<<\n",recursive.metadata.name);
+			if (!rm_bash(to_remove, (char *)&recursive.metadata.name[0], spb, ufs)) fail = 1;
+		}
+		if (fail) return 0;
+	}
+	clear_inode(ufs, blocksize, to_remove.id);
 	if (count > BLK_PER_IND-4)
 	{
 		for (i = BLK_PER_IND-4; i < count; i++)
@@ -47,4 +65,6 @@ void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 	}
 	inode_write(to_remove.id, ufs, blocksize, spb.root_inode, to_remove);
 	remove_from_dir(to_remove.id, parent, ufs, spb);
+	
+	return 1;
 }
