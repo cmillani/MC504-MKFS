@@ -41,6 +41,16 @@ int rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 	}
 	else // Should remove children too
 	{
+		spb.dir_inode--;
+		update_spb(spb, ufs);
+		
+		int try = ftell(ufs);
+		
+		fseek(ufs, 0, SEEK_SET);
+		fread(&spb, sizeof(superblock), 1, ufs);//Reloads superblock
+		
+		fseek(ufs, try, SEEK_SET);
+		
 		inode recursive;
 		int fail = 0;
 		for (i = 0; i < count; i++)
