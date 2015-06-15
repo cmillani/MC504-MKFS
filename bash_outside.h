@@ -13,5 +13,7 @@
 #include "bash.fs_reader.h"
 
 void minus_o(FILE * output, char path_inside[], FILE * ufs);
-
+void minus_i(FILE * input, char path_inside[], FILE * ufs);
+void minus_d(FILE * ufs);
+	
 #endif

@@ -31,7 +31,7 @@ void rm_bash(inode parent, char to_remove_name[], superblock spb, FILE * ufs)
 	{
 		for (i = 0; i < count; i++)
 		{
-			clear_block(ufs, blocksize, spb.root_dir, i);
+			clear_block(ufs, blocksize, spb.root_dir, children[i]);
 		}
 	}
 	if (count > BLK_PER_IND-4)

@@ -16,7 +16,9 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	if (!strcmp(command_list[arg_pos], "-i"))
 	{
 		if (vec_sz - arg_pos < 4) parse_error(INVALID_ARGS_ERR);
-		printf("Should -i\n");
+			FILE * input = fopen(command_list[arg_pos + 1], "rb");
+		FILE * ufs = fopen(command_list[arg_pos + 3], "rb+");
+		minus_i(input, command_list[arg_pos + 2], ufs);
 		ret_val = 3;
 	}
 	else if (!strcmp(command_list[arg_pos], "-o"))
@@ -38,7 +40,9 @@ int parse_fs_command(char * command_list[], int arg_pos, int vec_sz)
 	else if (!strcmp(command_list[arg_pos], "-d"))
 	{
 		if (vec_sz - arg_pos < 2) parse_error(INVALID_ARGS_ERR);
-		printf("Should -d\n");
+		// printf("Vai\n");
+		FILE * ufs = fopen(command_list[arg_pos + 1], "rb");
+		minus_d(ufs);
 		ret_val = 2;
 	}
 	else

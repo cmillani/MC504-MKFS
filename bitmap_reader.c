@@ -14,7 +14,10 @@ void clear_inode(FILE * ufs, int blocksize, int inode_id)
 	
 	fread(byte, sizeof(uint8_t), 1, ufs);
 	
-	byte[0] &= ~(1 << (inode_id%8));
+	// printf("Ant%d\n", byte[0]);
+	byte[0] &= ~(1 << (7 - inode_id%8));
+	// printf("Dep%d\n", byte[0]);
+	
 	fseek (ufs, -sizeof(uint8_t),SEEK_CUR);
 	fwrite(byte, sizeof(uint8_t), 1, ufs);
 	
@@ -31,7 +34,10 @@ void clear_block(FILE * ufs, int blocksize, int frst_data_blo, int block_nbr)
 	
 	fread(byte, sizeof(uint8_t), 1, ufs);
 	
-	byte[0] &= ~(1 << (block_nbr%8));
+	// printf("Ant%d\n", byte[0]);
+	byte[0] &= ~(1 << (7 - block_nbr%8));
+	// printf("Dep%d\n", byte[0]);
+	
 	fseek (ufs, -sizeof(uint8_t),SEEK_CUR);
 	fwrite(byte, sizeof(uint8_t), 1, ufs);
 	
@@ -50,7 +56,7 @@ int frst_free_inode(FILE * ufs, int blocksize) //Return the number of the first 
 		fread(byte, sizeof(uint8_t), 1, ufs);
 		// printf("POS: %ld\n",ftell(ufs));
 		// printf("%d\n",byte[0]);
-		for (j = 7; j > 0; j--)
+		for (j = 7; j > -1; j--)
 		{
 			if (!(byte[0] & 1 << j))//If the bit is clear the inode is so
 			{
@@ -79,13 +85,13 @@ int frst_free_block(FILE * ufs, int blocksize, int frst_data_blk) //Return the n
 	int selected = -1;
 	uint8_t byte[] = {0};
 	fseek(ufs, 2*blocksize, SEEK_SET);
-	int blocks_number = ((1204*1024*24)-(frst_data_blk*blocksize))/blocksize;
+	int blocks_number = ((1024*1024*24)-(frst_data_blk*blocksize))/blocksize;
 	for (i = 0; i < (int)ceil(blocks_number/8); i++) //1024 inodes, 1 inode per bit = 128 bytes (128*8 = 1024)
 	{
 		fread(byte, sizeof(uint8_t), 1, ufs);
 		// printf("POS: %ld\n",ftell(ufs));
 		// printf("%d\n",byte[0]);
-		for (j = 7; j > 0; j--)
+		for (j = 7; j > -1; j--)
 		{
 			if (!(byte[0] & 1 << j))//If the bit is clear the inode is so
 			{

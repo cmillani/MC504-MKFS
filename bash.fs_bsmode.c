@@ -29,6 +29,8 @@ void enable_bash_mode(char fs_name[])
 	
 	fread(spb, sizeof(superblock), 1, ufs);//Superblock read
 	// printf("%d\n",spb->magic_number);
+	// printf("%d\n",spb->root_inode);
+	// printf("%d\n",spb->root_dir);
 	//(inode curr_inode, FILE* ufs, int count, int blocksize)
 	// int variable = (int)spb->root_inode*(int)spb->magic_number;
 	printf("+++++++++++++++++++++++++++++\n");

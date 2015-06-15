@@ -24,7 +24,7 @@ void Display(node *head) {
             temp = temp->next;
         }
     }
-	printf(" # ");
+	printf(" $ ");
 }
 
 void Push(inode *Item, node **head) {

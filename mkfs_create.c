@@ -71,7 +71,7 @@ int mkfs_wr_block_bmp(FILE * output, int blocksize)
 	uint8_t block_bmp[blkbmp_sz*blocksize];
 	//printf(">>>>>>%d\n", blkbmp_sz);
 	int i;
-	for (i = 0; i < blkbmp_sz; i++)//Writes zeroes to all positions, all are free
+	for (i = 0; i < blkbmp_sz * blocksize; i++)//Writes zeroes to all positions, all are free
 	{
 		block_bmp[i] = 0;
 	}
@@ -135,7 +135,11 @@ int mkfs_wr_inodes(FILE * output, int blocksize)
 					fwrite(zero, sizeof(uint8_t), 1, output);
 				}
 			}
-			//printf(">>%lu\n",ftell(output));
+			// printf(">>%lu\n",ftell(output));
+		}
+		while(ftell(output)%1024 != 0)//Completes with zeroes
+		{
+			fwrite(zero, sizeof(uint8_t), 1, output);
 		}
 	}
 	
