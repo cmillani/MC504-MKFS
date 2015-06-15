@@ -106,6 +106,7 @@ inode * Pop(node **head) {
         }
     }
     item = temp->inode;
+	free(temp->inode);
     free(temp);
 	if (oldNode != NULL) oldNode->next = NULL;
 	else *head = NULL;
