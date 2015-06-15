@@ -15,10 +15,24 @@ void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock 
 		printf("Not enough permissions\n");
 		return;
 	}
+	uint16_t children_list[1024] = {0};
+	int i;
+	int blocksize = spb.magic_number;
+	inode comparer;
+	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
+	for (i = 0; i < freeblk; i++)
+	{
+		inode_read(children_list[i], ufs, blocksize, spb.root_inode, &comparer);
+		if (!strcmp((char *)&comparer.metadata.name[0], dir_name))
+		{
+			printf("A directory with this name already exists\n");
+			return;
+		}
+	}
 	//printf("%s\n",dir_name);
 	spb.dir_inode++;
 	update_spb(spb, ufs);
-	int blocksize = spb.magic_number;
+	
 	inode oldinode;
 	
 	int offset = frst_free_inode(ufs, blocksize);
@@ -52,8 +66,8 @@ void mkdir_bash(inode curr_inode, const char dir_name[], FILE * ufs, superblock 
 	inode_write(offset, ufs, blocksize, spb.root_inode, oldinode);
 	
 	
-	uint16_t children_list[1024] = {0};
-	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
+	// uint16_t children_list[1024] = {0};
+// 	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
 	// printf("FREE_IND_BLK = %d\n",freeblk);
 	write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
 	// printf("FREE:%d\n",freeblk);

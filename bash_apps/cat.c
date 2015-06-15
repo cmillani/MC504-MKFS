@@ -35,7 +35,7 @@ void cat_bash(inode curr_inode, const char target_name[], FILE * ufs, superblock
 		int print_lim = first_free_child(the_one, ufs, spb, blocksize, children_list);
 		// printf("Numb of blocks = %d\n", print_lim);
 		uint8_t block[blocksize];
-		// int j;
+		int j;
 		for (i = 0; i < print_lim; i++)
 		{
 			// printf("will print stuff\n");
@@ -44,8 +44,11 @@ void cat_bash(inode curr_inode, const char target_name[], FILE * ufs, superblock
 			// printf(">>>%d<<<\n", ftell(ufs));
 			fread(block, sizeof(uint8_t), blocksize, ufs);
 			// for (j = 0; j < blocksize; j++) printf("'%c'", block[j]);
-			printf("%s",block);
+			for (j = 0; j < blocksize; j++)
+			{
+				printf("%c",block[j]);
+			}
 		}
 	}
-	printf("\n");
+	// printf("\n");
 }

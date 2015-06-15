@@ -1,4 +1,5 @@
 #include "echo.h"
+#include "rm.h"
 
 void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 {
@@ -98,9 +99,39 @@ void echo_bash(inode curr_inode, FILE * ufs, superblock spb, char buffer[])
 
 
 	//Writes to the parent directory, this inode as a child
-
+	int i;
+	inode comparer;
+	int found = 0;
 	int freeblk = first_free_child(curr_inode, ufs, spb, blocksize, children_list);
-	write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
+	for (i = 0; i < freeblk; i++)
+	{
+		inode_read(children_list[i], ufs, blocksize, spb.root_inode, &comparer);
+		if (!strcmp((char *)&comparer.metadata.name[0], (char *)&the_name[0]))
+		{
+			// printf("Found");
+			found = 1;
+			if (comparer.metadata.type == DIR_TYPE)
+			{
+				write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
+				inode_read(curr_inode.id, ufs, blocksize, spb.root_inode, &curr_inode);
+				rm_bash(curr_inode, (char *)&the_name[0], spb, ufs);
+				
+			}
+			else
+			{
+				// printf("Foundya\n");
+				write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
+				inode_read(curr_inode.id, ufs, blocksize, spb.root_inode, &curr_inode);
+				rm_bash(curr_inode, (char *)&the_name[0], spb, ufs);
+				// inode_write(offset, ufs, blocksize, spb.root_inode, oldinode);
+			}
+		}
+	}
+	if (!found)
+	{
+		inode_read(curr_inode.id, ufs, blocksize, spb.root_inode, &curr_inode);
+		write_to_dir(freeblk, curr_inode, oldinode.id, spb, ufs);
+	}
 
 	fseek(ufs, pos_saver, SEEK_SET);
 }

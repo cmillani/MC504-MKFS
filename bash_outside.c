@@ -91,6 +91,11 @@ void minus_i(FILE * input, char path_inside[], FILE * ufs)
 	
 	
 	uint8_t translate_buffer[blocksize];
+	int k;
+	for (k = 0; k < blocksize; k++)
+	{
+		translate_buffer[k] = 0;
+	}
 	int offset = frst_free_inode(ufs, blocksize);
 	if(offset == -1 || offset > 1023) //Selected inode is not within the valid range
 	{
@@ -106,15 +111,21 @@ void minus_i(FILE * input, char path_inside[], FILE * ufs)
 	oldinode.metadata.parent = reloaded.id;
 	strcpy((char *)&(oldinode.metadata.name[0]), tok); //There is no ", then the 2 parameter is the target
 	inode_write(offset, ufs, blocksize, spb->root_inode, oldinode);
-	
+	int j = 0;
 	while (!feof(input) && !ferror(input))
 	{
-		fread(translate_buffer, sizeof(uint8_t), blocksize, input);
+		while (j < blocksize && !feof(input))
+		{
+			fread(&translate_buffer[j], sizeof(uint8_t), 1, input);
+			j++;
+		}
+		
 		// printf("+%s",translate_buffer);
 		int newblock = frst_free_block(ufs, blocksize, spb->root_dir);
 		int child = first_free_child(oldinode, ufs, *spb, blocksize, children_list);
 
 		write_to_file(child, oldinode, newblock, translate_buffer, *spb, ufs);
+		j = 0;
 	}
 	
 	inode_read(ViewLast(&current_dir)->id, ufs, spb->magic_number, spb->root_inode, &reloaded);
